@@ -190,22 +190,6 @@ def add_content_disk_to_fstab():
 
 
 # ================================
-# Install USB mounter 
-# ================================
-def install_usbmount():
-    result = sudo("apt-get install usbmount ntfs-3g -y","Unable to download usbmount")
-    display_log(result.output)
-    sudo("sed -i '/MountFlags=slave/c\MountFlags=shared' /lib/systemd/system/systemd-udevd.service","Unable to update udevd configuration (systemd-udevd.service)")
-    sudo("chmod +x ./build_elimupi/files/01_create_label_symlink ./build_elimupi/files/01_remove_model_symlink", False)
-    cp("./files/usbmount/usbmount.conf", "/etc/usbmount/")
-    cp("./files/usbmount/01_create_label_symlink", "/etc/usbmount/mount.d/")
-    cp("./files/usbmount/01_remove_model_symlink", "/etc/usbmount/umount.d")
-    cp("./files/usbmount/usbmount@.service", "/etc/systemd/system/")
-    cp("./files/usbmount/usbmount.rules", "/etc/udev/rules.d")
-    display_log("usb mount installed")
-    return True
-
-# ================================
 # Setup WiFi
 # ================================
 def install_wifi():
@@ -272,8 +256,6 @@ def install_moodle():
     display_log("Installing mariadb-server...")
     sudo("apt-get install -y mariadb-server","Unable to install MariadbServer")
     display_log("Done", col_log_ok)
-	# Determine last stable version (now fixed at 311)
-    # sudo("sed -i 's//var\/run\/usbmount\/Content\/moodledb' /etc/mysql/mariadb.conf.d/nano 50-server.cnf","Unable to set mariadb folder")
     # Start and enable DBserver
     display_log("Configuring mariadb-server...")
     sudo("systemctl enable mariadb.service","Unable to enable DB")
@@ -748,7 +730,7 @@ def PHASE0():
     statwin.addstr( 3,2, "[ ] Install GIT", col_info)
     statwin.addstr( 4,2, "[ ] Clone ElimuPi repository", col_info)
     statwin.addstr( 5,2, "[ ] Write install status file", col_info)
-    statwin.addstr( 6,2, "[ ] Install USBmount", col_info)
+    statwin.addstr( 6,2, "[ ] Mount content disk", col_info)
     statwin.addstr( 7,2, "[ ] Set pi password", col_info)
     statwin.addstr( 8,2, "[ ] Reboot", col_info)
     
@@ -820,8 +802,6 @@ def PHASE0():
     # ================================
     statwin.addstr( 6,3, "?" , col_info)
     statwin.refresh()
-    if not install_usbmount():
-        die("Unable to install usbmount")
     add_content_disk_to_fstab()
     sudo("mount --all", "Could not mount content disk")
     statwin.addstr( 6,3, "*" , col_info_ok)
