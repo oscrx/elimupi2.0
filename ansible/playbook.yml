@@ -1,0 +1,12 @@
+---
+- name: 'Provision Image'
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Enable ssh
+      file:
+        path: /boot.ssh
+        state: touch
+
+# TODO ufw firewall rules
