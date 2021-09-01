@@ -4,7 +4,6 @@ on: push
 
 jobs:
   packer:
-    name: packer
     runs-on: ubuntu-latest
 
     steps:
@@ -15,13 +14,13 @@ jobs:
       run: sudo apt-get install kpartx qemu-user-static
 
     - name: Setup go
-    - uses: actions/setup-go@v1
+      uses: actions/setup-go@v1
 
     - name: Build plugin
-    - run: go get github.com/solo-io/packer-builder-arm-image
+      run: go get github.com/solo-io/packer-builder-arm-image
 
     - name: Build plugin
-    - run: mv ~/go/bin/packer-builder-arm-image .
+      run: mv ~/go/bin/packer-builder-arm-image .
 
     - name: Validate Template
       uses: hashicorp/packer-github-actions@master
