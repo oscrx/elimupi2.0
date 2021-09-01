@@ -25,16 +25,13 @@ jobs:
       run: pwd
 
     - name: Debug
-      run: ls -lah $GOBIN
+      run: ls -lah
 
-    - name: Debug
-      run: ls -lah ~
-
-    - name: Debug
-      run: ls -lah ~/go
-
-    - name: Build plugin
+    - name: Move plugin
       run: mv ~/go/bin/packer-builder-arm-image .
+
+    - name: Debug
+      run: ls -lah
 
     - name: Validate Template
       uses: hashicorp/packer-github-actions@master
