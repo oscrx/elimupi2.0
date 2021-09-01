@@ -21,33 +21,17 @@ jobs:
     - name: Build plugin
       run: go get github.com/solo-io/packer-builder-arm-image
 
-    - name: Debug
-      run: pwd
-
-    - name: Debug
-      run: ls -lah
-
     - name: Move plugin
       run: mv ~/go/bin/packer-builder-arm-image .
 
-    - name: Debug
-      run: ls -lah
+    - name: Use latest Packer
+      uses: hashicorp-contrib/setup-packer@v1
 
-    - name: Validate Template
-      uses: hashicorp/packer-github-actions@master
-      with:
-        command: validate
-        arguments: -syntax-only
-        target: packer/image.pkr.hcl
+    - name: Validate template
+      run: packer validate -syntax-only packer/image.pkr.hcl
 
-    - name: Build Artifact
-      uses: hashicorp/packer-github-actions@master
-      with:
-        command: build
-        arguments: "-color=false -on-error=abort"
-        target: packer/image.pkr.hcl
-      env:
-        PACKER_LOG: 1
+    - name: Build image from template
+      run: packer build packer/image.pkr.hcl
 
     - name: Upload zip
       uses: actions/upload-artifact@v2
