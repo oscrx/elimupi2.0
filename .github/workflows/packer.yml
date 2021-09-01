@@ -31,7 +31,7 @@ jobs:
       run: packer validate -syntax-only packer/image.pkr.hcl
 
     - name: Build image from template
-      run: packer build packer/image.pkr.hcl
+      run: sudo packer build packer/image.pkr.hcl
 
     - name: Upload zip
       uses: actions/upload-artifact@v2
