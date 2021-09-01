@@ -1,0 +1,45 @@
+name: Packer
+
+on: push
+
+jobs:
+  packer:
+    name: packer
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies 
+      run: sudo apt-get install kpartx qemu-user-static
+
+    - name: Setup go
+    - uses: actions/setup-go@v1
+
+    - name: Build plugin
+    - run: go get github.com/solo-io/packer-builder-arm-image
+
+    - name: Build plugin
+    - run: mv ~/go/bin/packer-builder-arm-image .
+
+    - name: Validate Template
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: validate
+        arguments: -syntax-only
+        target: packer/image.pkr.hcl
+
+    - name: Build Artifact
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: build
+        arguments: "-color=false -on-error=abort"
+        target: packer/image.pkr.hcl
+      env:
+        PACKER_LOG: 1
+
+    - name: Upload zip
+      uses: actions/upload-artifact@v2
+      with:
+        path: output.zip

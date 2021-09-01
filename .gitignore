@@ -1,5 +1,5 @@
 images
-packer/packer-builder-arm-image
+packer-builder-arm-image
 packer_cache
 output*
 pishrink.sh

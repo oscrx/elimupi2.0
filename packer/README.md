@@ -5,7 +5,7 @@ Packer plugin used: [packer-builder-arm-image](https://github.com/solo-io/packer
 Dependencies:
 
 - `packer` - Well..
-- `kpartx` - mapping the partitons to mountable devices
+- `kpartx` - Mapping the partitons to mountable devices
 - `qemu-user-static` - Executing arm binaries
 - `golang-go` - Building the plugin with go
 
@@ -17,17 +17,17 @@ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(l
 sudo apt update && sudo apt install -y packer kpartx qemu-user-static golang-go
 ```
 
-Building the plugin: (from the packer directory)
+Building the plugin:
 
 ```bash
 go get github.com/solo-io/packer-builder-arm-image
 mv ~/go/bin/packer-builder-arm-image .
 ```
 
-Building the image: (from the packer directory)
+Building the image:
 
 ```bash
-packer build image.pkr.hcl
+packer build packer/image.pkr.hcl
 ```
 
 Profit.

@@ -4,9 +4,117 @@
   become: true
 
   tasks:
-    - name: Enable ssh
-      file:
-        path: /boot.ssh
-        state: touch
+  - name: Enable ssh
+    file:
+      path: /boot.ssh
+      state: touch
 
-# TODO ufw firewall rules
+  - name: Set hostname
+    hostname:
+      name: elimupi
+
+  - name: Create groups
+    group:
+      name: "{{ item }}"
+    loop:
+      - admins
+      - teachers
+      - students
+
+  - name: Change password
+    user:
+      name: pi
+      password: elimupi
+      group: pi
+      groups:
+      - teachers
+
+  - name: Create admin account
+    user:
+      name: deanadmin
+      password: topsecret
+      group: admins
+
+  - name: Create headmaster account
+    user:
+      name: headmaster
+      password: headmaster
+      group: teachers
+
+  - name: Upgrade OS
+    apt:
+      upgrade: dist
+
+  # TODO update rbp firmware on first boot
+
+  - name: Add repo key learningequality
+    apt_key:
+      keyserver: hkp://keyserver.ubuntu.com:80
+      id: DC5BAA93F9E4AE4F0411F97C74F88ADB3194DD81
+
+  - name: Add repository learningeqality
+    apt_repository:
+      repo: deb http://ppa.launchpad.net/learningequality/kolibri/ubuntu bionic main
+
+  - name: Install applications
+    apt:
+      name:
+      - ufw
+      - git
+      - nginx
+      - php-fpm
+      - iptables
+      - libffi-dev
+      - python3-pip
+      - python3-pkg-resources
+      - dirmngr
+      - kolibri
+      - kolibri-server
+      - dnsmasq
+      - citadel-suite
+      - fdroidserver
+      - usbmount
+      - ntfs-3g
+      - mariadb-server
+      - php-mysql
+  
+  - name: Make content mount dir
+    file:
+      name: /mnt/content
+      state: directory
+
+  # TOFO fix firewall part
+  # ==> arm-image.elimupi-raspios-buster: iptables/1.8.2 Failed to initialize nft: Protocol family not supported
+
+  # - name: Reset firewall
+  #   ufw:
+  #     state: reset
+
+  # - name: Enable firewall
+  #   ufw:
+  #     state: enabled
+  #     policy: deny
+
+  # - name: Allow http
+  #   ufw:
+  #     rule: allow
+  #     port: 80
+  #     proto: tcp
+  #     src: '{{ item }}'
+  #   loop:
+  #     - fe80::/10
+  #     - 10.0.0.0/8
+  #     - 172.16.0.0/12
+  #     - 192.168.0.0/16
+
+  # - name: Allow ssh
+  #   ufw:
+  #     port: 22
+  #     proto: tcp
+  #     rule: allow
+  #     src: '{{ item }}'
+  #   loop:
+  #     - fe80::/10
+  #     - 10.0.0.0/8
+  #     - 172.16.0.0/12
+  #     - 192.168.0.0/16
