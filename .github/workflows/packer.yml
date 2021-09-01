@@ -22,7 +22,7 @@ jobs:
       run: go get github.com/solo-io/packer-builder-arm-image
 
     - name: Build plugin
-      run: mv ~/go/bin/packer-builder-arm-image .
+      run: mv $GOBIN/packer-builder-arm-image /github/workspace/
 
     - name: Validate Template
       uses: hashicorp/packer-github-actions@master
