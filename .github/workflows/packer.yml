@@ -21,6 +21,21 @@ jobs:
     - name: Build plugin
       run: go get github.com/solo-io/packer-builder-arm-image
 
+    - name: Debug
+      run: pwd
+
+    - name: Debug
+      run: ls -lah $GOBIN
+
+    - name: Debug
+      run: ls -lah /github/workspace/
+
+    - name: Debug
+      run: ls -lah ~
+
+    - name: Debug
+      run: ls -lah ~/go
+
     - name: Build plugin
       run: mv $GOBIN/packer-builder-arm-image /github/workspace/
 
