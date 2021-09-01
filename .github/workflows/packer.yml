@@ -14,7 +14,9 @@ jobs:
       run: sudo apt-get install kpartx qemu-user-static
 
     - name: Setup go
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.13.8'
 
     - name: Build plugin
       run: go get github.com/solo-io/packer-builder-arm-image
