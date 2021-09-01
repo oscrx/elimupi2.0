@@ -19,7 +19,7 @@ jobs:
         go-version: '^1.13.8'
 
     - name: Build plugin
-      run: go get github.com/solo-io/packer-builder-arm-image
+      run: go install github.com/solo-io/packer-builder-arm-image@master
 
     - name: Move plugin
       run: mv ~/go/bin/packer-builder-arm-image .
