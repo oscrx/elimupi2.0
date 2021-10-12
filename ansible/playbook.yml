@@ -1,17 +1,22 @@
 ---
 - name: 'Provision Image'
-  hosts: localhost
+  hosts: all
   become: true
 
   tasks:
   - name: Enable ssh
     file:
-      path: /boot.ssh
+      path: /boot/ssh
       state: touch
 
   - name: Set hostname
     hostname:
       name: elimupi
+
+  - name: Set hostsfile
+    template:
+      src: templates/hosts
+      dest: /etc/hosts
 
   - name: Create groups
     group:
@@ -24,7 +29,7 @@
   - name: Change password
     user:
       name: pi
-      password: elimupi
+      password: "$6$b3gxvKWPUcs2g3t0$5XgHJvkpolByOwgowa3FZLF7Mp3g1u3fj7x/eoGlBRZ0IoauLx7Icik/lnaRcn7hJMnlwrdZwXNTZnUb.bXPN1" # elimupi
       group: pi
       groups:
       - teachers
@@ -32,13 +37,13 @@
   - name: Create admin account
     user:
       name: deanadmin
-      password: topsecret
+      password: "$6$8nyRab3gxvKWPUcs$tEoTxWLx8G6EusYnd0oldZrg9hcQj6YR4qjD.Alwr9B8HmyT23r1ERw4SyI6S./zhtcPcD2X8J.2slvVUsNHi." # topsecret
       group: admins
 
   - name: Create headmaster account
     user:
       name: headmaster
-      password: headmaster
+      password: "$6$JUefhA0qvD7b5LSh$6L5Pne1tpXvqL/VBu4U/pQh0K2XYuP6ip7I3XI0No.Q8AXLT1DY74F4gaAJ6vZ90jfg1O5IGA3jgaP.GyWqC8." # headmaster
       group: teachers
 
   - name: Upgrade OS
@@ -62,7 +67,17 @@
       - ufw
       - git
       - nginx
+      - php
       - php-fpm
+      - php-curl
+      - php-xml
+      - php-mbstring
+      - php-zip
+      - php-gd
+      - php-intl
+      - php-xmlrpc
+      - php-soap
+      - php-mysql
       - iptables
       - libffi-dev
       - python3-pip
@@ -76,8 +91,14 @@
       - usbmount
       - ntfs-3g
       - mariadb-server
-      - php-mysql
-  
+      - hostapd
+      - udhcpd
+
+  - name: Remove dependencies that are no longer required
+    apt:
+      autoremove: yes
+      autoclean: yes
+
   - name: Make content mount dir
     file:
       name: /mnt/content
