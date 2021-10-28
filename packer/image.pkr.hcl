@@ -35,7 +35,7 @@ build {
   provisioner "ansible-local" {
     playbook_file = "ansible/playbook.yml"
     extra_arguments = [
-      "--extra-vars template_path=/tmp/templates/"
+      "--extra-vars template_path=/tmp/templates/",
       "--verbose"
     ]
   }
