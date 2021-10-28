@@ -1,6 +1,8 @@
 ---
 - name: 'Provision Image'
   hosts: all
+  vars:
+    template_path: templates/ # For local ansible runs, packer overwrites this.
   become: true
 
   tasks:
@@ -15,7 +17,7 @@
 
   - name: Set hostsfile
     template:
-      src: templates/hosts
+      src: "{{ template_path }}hosts"
       dest: /etc/hosts
 
   - name: Create groups
